@@ -1,0 +1,11 @@
+services:
+  valuora:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      VALUORA_SECRET: "change-this-to-a-long-random-secret"
+      COOKIE_SECURE: "0"
+    volumes:
+      - ./valuora.db:/app/valuora.db
+    restart: unless-stopped

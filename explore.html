@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="page-head discovery-head">
+  <div><span class="eyebrow">DISCOVERY ENGINE 2.0</span><h1>Məhsul kəşf mərkəzi</h1><p>Qiymətləri araşdır, kateqoriyaları süz, məhsulu sürətli baxışda aç və bir kliklə müqayisəyə əlavə et.</p></div>
+  <div class="head-actions"><a class="btn ghost" href="/compare">⇄ Müqayisə laboratoriyası</a>{% if user %}<a class="btn" href="/dashboard">+ Yeni analiz</a>{% else %}<a class="btn" href="/register">Pulsuz başla</a>{% endif %}</div>
+</section>
+
+<section class="discovery-command panel">
+  <form class="searchbar discovery-search" method="get" action="/explore" id="exploreForm">
+    <span>⌕</span><input id="exploreQuery" name="q" value="{{ q }}" autocomplete="off" placeholder="Məhsul, brend, model və ya mağaza axtar...">
+    <select id="exploreCategory" name="category"><option value="">Bütün kateqoriyalar</option>{% for c in categories %}<option value="{{ c }}" {% if c==category %}selected{% endif %}>{{ c }}</option>{% endfor %}</select>
+    <select name="sort"><option value="new" {% if sort=='new' %}selected{% endif %}>Ən yeni</option><option value="price_low" {% if sort=='price_low' %}selected{% endif %}>Ucuzdan bahaya</option><option value="price_high" {% if sort=='price_high' %}selected{% endif %}>Bahadan ucuza</option><option value="activity" {% if sort=='activity' %}selected{% endif %}>Ən aktiv</option></select>
+    <button class="btn" type="submit">Axtar</button>
+  </form>
+  <div class="filter-chips"><a class="chip {% if not category %}active{% endif %}" href="/explore">Hamısı</a>{% for c in categories %}<a class="chip {% if c==category %}active{% endif %}" href="/explore?category={{ c|urlencode }}">{{ c }}</a>{% endfor %}</div>
+</section>
+
+<section class="discovery-metrics">
+  <div class="mini-stat"><span>Tapılan məhsul</span><strong data-count="{{ total }}">0</strong></div>
+  <div class="mini-stat"><span>Kateqoriya</span><strong>{{ categories|length }}</strong></div>
+  <div class="mini-stat"><span>Qiymət müşahidəsi</span><strong>{{ observation_total }}</strong></div>
+  <div class="mini-stat"><span>Mağaza siqnalı</span><strong>{{ store_total }}</strong></div>
+</section>
+
+<section class="product-grid discovery-grid" id="productGrid">
+{% for p in products %}
+<article class="product-card discovery-card" data-name="{{ p.name|lower }}" data-brand="{{ (p.brand or '')|lower }}" data-category="{{ p.category or '' }}">
+  <div class="product-img">
+    {% if p.image %}<img src="{{ p.image }}" alt="{{ p.name }}" loading="lazy">{% else %}<span>{{ (p.brand or 'V')[:1]|upper }}</span>{% endif %}
+    <div class="product-overlay"><a class="btn ghost" href="/product/{{ p.id }}">Sürətli baxış</a></div>
+  </div>
+  <div class="pc-body">
+    <div class="card-meta"><small>{{ p.category or 'Digər' }}</small><small>{{ p.observations }} müşahidə</small></div>
+    <h3>{{ p.name }}</h3><p>{{ p.brand or 'Brend müəyyən edilməyib' }}{% if p.model %} · {{ p.model }}{% endif %}</p>
+    <div class="pc-foot"><strong>{% if p.latest_price is not none %}{{ '%.2f'|format(p.latest_price) }} ₼{% else %}Qiymət yoxdur{% endif %}</strong><a href="/product/{{ p.id }}">Detallar →</a></div>
+    <div class="card-actions"><a href="/compare?id={{ p.id }}" class="text-action">⇄ Müqayisə</a>{% if user %}<form method="post" action="/saved/toggle"><input type="hidden" name="product_id" value="{{ p.id }}"><button class="text-action" type="submit">☆ Saxla</button></form>{% endif %}</div>
+  </div>
+</article>
+{% else %}
+<div class="empty full discovery-empty"><div class="empty-icon">⌕</div><h3>Uyğun məhsul tapılmadı</h3><p>Axtarışı dəyiş və ya dashboard-dan yeni məhsul URL-i analiz et.</p><a class="btn" href="/dashboard">Yeni məhsul analiz et →</a></div>
+{% endfor %}
+</section>
+
+{% if products %}<div class="discovery-footer"><span>{{ products|length }} məhsul göstərilir{% if total > products|length %} · ümumilikdə {{ total }} nəticə{% endif %}</span><span class="live-dot">● LIVE DISCOVERY</span></div>{% endif %}
+{% endblock %}

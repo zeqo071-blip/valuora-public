@@ -1,0 +1,6 @@
+{% extends 'base.html' %}{% block content %}<section class="page-head"><div><span class="eyebrow">DEVELOPER PLATFORM</span><h1>Valuora API</h1><p>Məhsul qiyməti və müşahidə məlumatlarını öz tətbiqinə bağlamaq üçün API strukturu.</p></div><a class="btn" href="/profile">API açarı yarat</a></section><section class="docs-grid"><article class="panel"><span class="method get">GET</span><code>/api/health</code><p>Servisin işləkliyini yoxlayır.</p></article><article class="panel"><span class="method get">GET</span><code>/api/products/{id}</code><p>Məhsul və son qiymət müşahidələrini qaytarır.</p></article><article class="panel"><span class="method get">GET</span><code>/api/compare?ids=1,2</code><p>Məhsulları müqayisə üçün JSON formatında qaytarır.</p></article><pre class="codeblock">curl https://SENIN-DOMENIN/api/products/12
+
+{
+  "product": { "id": 12, "name": "..." },
+  "observations": []
+}</pre></section>{% endblock %}
