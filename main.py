@@ -3,6 +3,7 @@ import sys
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
 
 # Uygulamanın ana dizinini belirle
 BASE = os.path.dirname(os.path.abspath(__file__))
@@ -45,7 +46,19 @@ templates = Jinja2Templates(directory=templates_dir)
 def health_check():
     return {"status": "ok"}
 
-# Ana sayfa yönlendirmesi
-@app.get("/")
+# Ana sayfa (index.html dosyasını yükler)
+@app.get("/", response_class=HTMLResponse)
 def read_root():
-    return {"message": "Valuora API sunucusu sorunsuz çalışıyor!"}
+    # Olası index.html yollarını kontrol et
+    possible_paths = [
+        os.path.join(BASE, 'app/templates/index.html'),
+        os.path.join(BASE, 'templates/index.html'),
+        os.path.join(BASE, 'index.html')
+    ]
+    
+    for path in possible_paths:
+        if os.path.exists(path):
+            with open(path, 'r', encoding='utf-8') as f:
+                return f.read()
+                
+    return "
