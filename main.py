@@ -52,4 +52,4 @@ def read_root():
             with open(path, 'r', encoding='utf-8') as f:
                 return f.read()
                 
-    fallback_html = "
+    return HTMLResponse(content=bytes([60, 104, 49, 62, 86, 97, 108, 117, 111, 114, 97, 60, 47, 104, 49, 62]).decode())
