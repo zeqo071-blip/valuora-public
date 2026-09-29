@@ -20,7 +20,7 @@ for directory in REQUIRED_DIRS:
         try:
             os.makedirs(directory, exist_ok=True)
         except Exception as e:
-            print(f"Klasör oluşturulamadı ({directory}): {e}")
+            print(f"Directory creation error ({directory}): {e}")
 
 db_path = os.getenv("VALUORA_DB", "/tmp/valuora.db")
 db_dir = os.path.dirname(db_path)
