@@ -2,7 +2,7 @@ services:
   - type: web
     name: valuora-public
     runtime: docker
-    plan: 0.5c-512mb
+    plan: free
     region: frankfurt
     healthCheckPath: /api/health
     autoDeployTrigger: commit
@@ -12,8 +12,4 @@ services:
       - key: COOKIE_SECURE
         value: "1"
       - key: VALUORA_DB
-        value: /var/data/valuora.db
-    disk:
-      name: valuora-data
-      mountPath: /var/data
-      sizeGB: 1
+        value: /tmp/valuora.db
