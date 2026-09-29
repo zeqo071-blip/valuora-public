@@ -15,6 +15,17 @@ os.makedirs(os.path.dirname(os.path.abspath(DB)), exist_ok=True)
 SECRET=os.getenv('VALUORA_SECRET','change-this-secret-in-production')
 signer=URLSafeSerializer(SECRET,'session')
 app=FastAPI(title='Valuora AZ', version='5.0')
+import os
+
+# static qovluğunun yolunu təyin et
+static_dir = os.path.join(BASE, 'app/static')
+
+# Əgər qovluq yoxdursa, onu avtomatik yarat
+if not os.path.exists(static_dir):
+    os.makedirs(static_dir, exist_ok=True)
+
+# Statik faylları montaj et
+app.mount('/static', StaticFiles(directory=static_dir), name='static')
 app.mount('/static',StaticFiles(directory=os.path.join(BASE,'app/static')),name='static')
 templates=Jinja2Templates(directory=os.path.join(BASE,'app/templates'))
 
